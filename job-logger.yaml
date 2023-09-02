@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: CronJob
+metadata:
+  name: pod-status-logger-cronjob
+  labels:
+    app: pod-status-logger
+spec:
+  # Run every 10th minute
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: pod-status-logger
+            image: bitnami/kubectl
+            imagePullPolicy: IfNotPresent
+            command:
+              - sh
+              - "-c"
+            args:
+              - |
+                NOW=$(date +%s)
+                X_MINUTES_AGO=$(expr $NOW - 900)  # 15 minutes ago, a little longer than the cronjob runs
+                # This gets pods in all namespaces and filters them by those that had a most recent lastTransitionTime greater than X_MINUTES_AGO. Then prints their status dict along with their name.
+                kubectl get pods -n $NAMESPACE -o json | jq ".items[].status.conditions |= sort_by(.lastTransitionTime | fromdateiso8601) | select(.items[].status.conditions[-1].lastTransitionTime | . == null or fromdateiso8601 > $X_MINUTES_AGO) | {name: .items[].metadata.name, status: .items[].status}"
+          restartPolicy: OnFailure

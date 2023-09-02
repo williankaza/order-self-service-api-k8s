@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-configmap-env
+data:
+  PORT: "8080"
+  DATABASE_URL: "postgresql://postgres:postgres@database-service:5432/fiap?schema=public"
+  MERCADO_PAGO_BASE_URL: "https://api.mercadopago.com"

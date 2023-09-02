@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: order-self-service
+  name: meu-pod
+spec:
+  containers:
+    - name: meu-container
+      image: "willkazahaya/order-self-service:v2.5"
+      volumeMounts:
+      - name: debug-storage
+        mountPath: /tmp/wyk
+      ports:
+        - containerPort: 8080
+      env:
+      - name: PORT
+        value: "8080"
+      - name: DATABASE_URL
+        value: "postgresql://postgres:postgres@database-service:5432/fiap?schema=public"
+  volumes:
+  - name: debug-storage
+    persistentVolumeClaim:
+      claimName: app-debug-pvc

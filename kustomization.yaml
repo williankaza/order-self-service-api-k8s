@@ -1,0 +1,13 @@
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - database-configmap-env
+  - database-secret
+  - app-configmap-env
+  - app-secret
+  - database-persistent-volume
+  - database-persistent-volume-claim
+  - database-deployment
+  - database-service
+  - app-deployment
+  - app-service

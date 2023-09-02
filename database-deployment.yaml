@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+  namespace: order-self-service
+  labels:
+    app: database
+spec:
+  selector:
+    matchLabels:
+      app: database
+  replicas: 1
+  template:
+    metadata:
+      name: database
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: database
+          image: postgres:15.3
+          ports:
+            - containerPort: 5432
+              name: "postgres"
+          volumeMounts:
+            - mountPath: "/var/lib/postgresql/data"
+              name: database-storage
+          envFrom:
+            - configMapRef:
+                name: database-configmap-env
+            - secretRef:
+                name: database-secret
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: "1"
+      volumes:
+        - name: database-storage
+          persistentVolumeClaim:
+            claimName: database-persistent-volume-claim
