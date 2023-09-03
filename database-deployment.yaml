@@ -22,19 +22,18 @@ spec:
           ports:
             - containerPort: 5432
               name: "postgres"
-          volumeMounts:
-            - mountPath: "/var/lib/postgresql/data"
-              name: database-storage
           envFrom:
             - configMapRef:
                 name: database-configmap-env
-            - secretRef:
-                name: database-secret
           resources:
             limits:
               memory: 1Gi
               cpu: "1"
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: database-storage
       volumes:
         - name: database-storage
           persistentVolumeClaim:
             claimName: database-persistent-volume-claim
+      

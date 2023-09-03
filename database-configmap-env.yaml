@@ -3,4 +3,6 @@ kind: ConfigMap
 metadata:
   name: database-configmap-env
 data:
-  POSTGRES_DB: "fiap"
+  POSTGRES_DB: fiap
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
